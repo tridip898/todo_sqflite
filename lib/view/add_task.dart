@@ -94,115 +94,120 @@ class _AddTaskPageState extends State<AddTaskPage> {
     final provider = Provider.of<TaskProvider>(context);
     return SafeArea(
       child: Scaffold(
-          body: GestureDetector(
-        onTap: () =>FocusScope.of(context).unfocus(),
-        child: SingleChildScrollView(
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 3.h),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Icon(
-                          Icons.arrow_back_ios,
-                          size: 3.2.h,
-                        )),
-                    Column(
+          body: Consumer<TaskProvider>(
+            builder: (context,provider,child){
+              return GestureDetector(
+                onTap: () =>FocusScope.of(context).unfocus(),
+                child: SingleChildScrollView(
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 3.h),
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          _titleText,
-                          style: TextStyle(
-                              fontSize: 20.sp, fontWeight: FontWeight.w600),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            IconButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                icon: Icon(
+                                  Icons.arrow_back_ios,
+                                  size: 3.2.h,
+                                )),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _titleText,
+                                  style: TextStyle(
+                                      fontSize: 20.sp, fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  DateFormat.yMMMd('en_US').format(DateTime.now()),
+                                  style: TextStyle(
+                                      fontSize: 14.sp, fontWeight: FontWeight.w500),
+                                )
+                              ],
+                            )
+                          ],
                         ),
-                        Text(
-                          DateFormat.yMMMd('en_US').format(DateTime.now()),
-                          style: TextStyle(
-                              fontSize: 14.sp, fontWeight: FontWeight.w500),
+                        SizedBox(
+                          height: 2.h,
+                        ),
+                        Form(
+                          key: _formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 2.h,horizontal: 2.w),
+                                child: TextFormField(
+                                  style: TextStyle(fontSize: 15.sp),
+                                  decoration: InputDecoration(
+                                      hintText: "Title",
+                                      hintStyle: TextStyle(fontSize: 15.sp),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.black,width: 5),
+                                          borderRadius: BorderRadius.circular(10))),
+                                  onSaved: (input)=>_title=input!,
+                                  initialValue: _title,
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 2.h,horizontal: 2.w),
+                                child: TextFormField(
+                                  style: TextStyle(fontSize: 15.sp),
+                                  decoration: InputDecoration(
+                                      hintText: "Description",
+                                      hintStyle: TextStyle(fontSize: 15.sp),
+                                      border: OutlineInputBorder(
+                                          borderSide: BorderSide(color: Colors.black,width: 5),
+                                          borderRadius: BorderRadius.circular(10))),
+                                  onSaved: (input)=>_description=input!,
+                                  initialValue: _description,
+                                ),
+                              ),
+
+                              SizedBox(height: 2.h,),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  MaterialButton(
+                                    onPressed: (){
+                                      final title=_titleController.text.trim();
+                                      final description=_descriptionController.text.trim();
+                                      if(provider.task == null){
+                                        final task=TaskModel(title: title,description: description);
+                                        Provider.of<TaskProvider>(context,listen: false).addTask(task);
+                                        _titleController.clear();
+                                        _descriptionController.clear();
+                                        Navigator.push(context, MaterialPageRoute(builder: (_)=>HomePage()));
+                                      }else{
+
+                                      }
+                                    },
+                                    color: Color(0xff2E4F4F),
+                                    child: Text(provider.task == null ? "Save": "Update",style: TextStyle(fontSize: 16.sp,color: Colors.white),),
+                                    padding: EdgeInsets.symmetric(horizontal: 6.w,vertical: 1.h),
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(20)
+                                    ),
+                                  ),
+                                  SizedBox(width: 2.w,),
+                                ],
+                              ),
+                            ],
+                          ),
                         )
                       ],
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 2.h,
-                ),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 2.h,horizontal: 2.w),
-                        child: TextFormField(
-                          style: TextStyle(fontSize: 15.sp),
-                          decoration: InputDecoration(
-                              hintText: "Title",
-                              hintStyle: TextStyle(fontSize: 15.sp),
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.black,width: 5),
-                                  borderRadius: BorderRadius.circular(10))),
-                          onSaved: (input)=>_title=input!,
-                          initialValue: _title,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(vertical: 2.h,horizontal: 2.w),
-                        child: TextFormField(
-                          style: TextStyle(fontSize: 15.sp),
-                          decoration: InputDecoration(
-                              hintText: "Description",
-                              hintStyle: TextStyle(fontSize: 15.sp),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black,width: 5),
-                                  borderRadius: BorderRadius.circular(10))),
-                          onSaved: (input)=>_description=input!,
-                          initialValue: _description,
-                        ),
-                      ),
-
-                      SizedBox(height: 2.h,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          MaterialButton(
-                              onPressed: (){
-                                final title=_titleController.text.trim();
-                                final description=_descriptionController.text.trim();
-                                if(provider.task == null){
-                                  final task=TaskModel(title: title,description: description);
-                                  Provider.of<TaskProvider>(context,listen: false).addTask(task);
-                                  _titleController.clear();
-                                  _descriptionController.clear();
-                                  Navigator.push(context, MaterialPageRoute(builder: (_)=>HomePage()));
-                                }else{
-
-                                }
-                              },
-                            color: Colors.redAccent,
-                            child: Text(provider.task ==null ? "Save": "Update",style: TextStyle(fontSize: 16.sp),),
-                            padding: EdgeInsets.symmetric(horizontal: 6.w,vertical: 1.h),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)
-                            ),
-                          ),
-                          SizedBox(width: 2.w,),
-                        ],
-                      ),
-                    ],
+                    ),
                   ),
-                )
-              ],
-            ),
-          ),
-        ),
-      )),
+                ),
+              );
+            },
+          )
+    ),
     );
   }
 }

@@ -9,7 +9,6 @@ class SQLHelper {
 
   SQLHelper._instance();
   static final SQLHelper instance = SQLHelper._instance();
-
   static Database? _db = null;
 
 
@@ -32,13 +31,11 @@ class SQLHelper {
 
   //this method we used for create our database
   void _createDb(Database db, int version) async {
-    await db.execute('''
-      CREATE TABLE taskTable (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT,
-        description TEXT,
-        status INTEGER
-      )
-    ''');
+    await db.execute("""CREATE TABLE taskTable(
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    title TEXT,
+    description TEXT,
+    createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP)
+    """);
   }
 }

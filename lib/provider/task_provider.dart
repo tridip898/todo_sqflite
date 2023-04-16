@@ -15,6 +15,7 @@ class TaskProvider with ChangeNotifier{
     notifyListeners();
   }
 
+
   void getTasks() async {
     _task = await _taskToDo.getTaskList();
     notifyListeners();
